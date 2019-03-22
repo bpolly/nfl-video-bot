@@ -11,7 +11,7 @@ def hello_world():
 
 @app.route('/handle_data', methods=['POST'])
 def handle_data():
-    provided_link = request.form['linkField']
+    provided_link = json.loads(request.data)['linkField']
     html = urlopen(provided_link).read().decode('utf-8')
     mp4_match = re.search('videoUri\": \"(.*.mp4)', html)
     if mp4_match != None:

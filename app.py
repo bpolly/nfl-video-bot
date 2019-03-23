@@ -18,8 +18,8 @@ def handle_data():
     html = get_source_code(provided_link)
     mp4_link, feed_url, video_id = get_important_values(html)
 
-    if mp4_link:
-        return jsonify({ 'links': [mp4_link] })
+    # if mp4_link:
+    #     return jsonify({ 'links': [mp4_link] })
     if not feed_url:
         return error_response('Could not find file list.')
     if not video_id:
@@ -28,6 +28,8 @@ def handle_data():
     json_file_contents = json.loads(get_source_code(feed_url))
     video_list = json_file_contents['videos']
     video_link_list = get_second_page_mp4_links(video_list, video_id)
+    if(mp4_link and (not mp4_link in video_link_list)):
+        video_link_list.append(mp4_link)
     return jsonify({ 'links': video_link_list })
 
 def get_source_code(url):
@@ -54,10 +56,13 @@ def get_first_page_mp4_link(text):
         return None
 
 def get_second_page_mp4_links(video_list, video_id):
+    found_video = None
     try:
         found_video = next(video for video in video_list if video['id'] == video_id)
     except StopIteration:
         print("No rows")
+    if not found_video:
+        return []
     links = map(lambda x: x['videoPath'], found_video['videoBitRates'])
     return list(links)
 

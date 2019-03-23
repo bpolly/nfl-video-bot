@@ -3,7 +3,7 @@
     <link rel="stylesheet" href="//cdn.rawgit.com/necolas/normalize.css/master/normalize.css">
     <link rel="stylesheet" href="//cdn.rawgit.com/milligram/milligram/master/dist/milligram.min.css">
     <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='css/form.css') }}">
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>
     <script defer type="text/javascript" src="{{ url_for('static', filename='js/form_sender.js') }}"></script>
 </head>
 
@@ -17,10 +17,7 @@
             </fieldset>
         </form>
 
-        <div id="result--success" class="clearfix" style="display: none">
-            <div class="result-text"></div>
-            <button class="button button-outline button-small float-right btn-copy">Copy</button>
-        </div>
+        <div id="results"></div>
 
         <div id="result--error" class="clearfix" style="display: none">
             <div class="result-text"></div>

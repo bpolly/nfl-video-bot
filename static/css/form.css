@@ -1,4 +1,11 @@
-#result {
+#result--success {
+    word-break: break-all;
+    background-color: #e5f7f5;
+    padding: 20px;
+
+}
+
+#result--error {
     word-break: break-all;
     background-color: #f0e5f7;
     padding: 20px;

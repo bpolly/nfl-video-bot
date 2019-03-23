@@ -1,5 +1,7 @@
 document.querySelector('#link-form').addEventListener('submit', function(e) {
     e.preventDefault();
+    document.getElementById("result--success").style.display = "none";
+    document.getElementById("result--error").style.display = "none";
     let formData = new FormData(this);
     let parsedData = {};
     for(let name of formData) {
@@ -15,13 +17,13 @@ document.querySelector('#link-form').addEventListener('submit', function(e) {
 
     axios.post('/handle_data', parsedData)
         .then(function(response) {
-            document.getElementById("result-text").innerHTML = response.data['links'];
-            document.getElementById("result").style.display = "block";
+            document.querySelector("#result--success .result-text").innerHTML = response.data['links'];
+            document.getElementById("result--success").style.display = "block";
         })
         .catch(function(error) {
             error_message = error.response.data['error']
-            document.getElementById("result-text").innerHTML = error_message;
-            document.getElementById("result").style.display = "block";
+            document.querySelector("#result--error .result-text").innerHTML = error_message;
+            document.getElementById("result--error").style.display = "block";
         });
 });
 
@@ -30,8 +32,8 @@ var copyButtons = document.querySelectorAll('.btn-copy');
 Array.from(copyButtons).forEach(button => {
     button.addEventListener('click', function(event) {
         const textField = document.createElement('textarea');
-        var resultText = document.getElementById("result-text");
-        textField.innerText = resultText.innerHTML;
+        var resultText = button.parentElement.querySelector('.result-text').innerText;
+        textField.innerText = resultText;
         document.body.appendChild(textField);
         textField.select();
         document.execCommand('copy');

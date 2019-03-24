@@ -16,24 +16,28 @@ def handle_data():
         return error_response('URL not a valid nfl.com link')
 
     html = get_source_code(provided_link)
-    mp4_link, feed_url, video_id = get_important_values(html)
+    first_page_link, feed_url, video_id = get_important_values(html)
 
-    # if mp4_link:
-    #     return jsonify({ 'links': [mp4_link] })
     if not feed_url:
         return error_response('Could not find file list.')
     if not video_id:
         return error_response('Could not find video ID.')
 
+    # Find videos on channel feed JSON page
     json_file_contents = json.loads(get_source_code(feed_url))
-    video_list = json_file_contents['videos']
-    video_link_list = get_second_page_mp4_links(video_list, video_id)
-    if(mp4_link and (not mp4_link in video_link_list)):
-        video_link_list.append(mp4_link)
-    video_link_list = video_link_list + get_embeddable_video_links(video_id)
-    video_link_list = map(lambda url: re.sub('a.video.nfl', 'video.nfl', url), video_link_list)
-    video_link_list = list(dict.fromkeys(video_link_list))
-    return jsonify({ 'links': video_link_list })
+    second_page_links = get_second_page_mp4_links(json_file_contents['videos'], video_id)
+
+    # Find videos on embedded video JSON page
+    embedded_video_links = get_embeddable_video_links(video_id)
+
+    # Put all the links into a list and remove dupes
+    final_link_list = gather_and_dedupe_links(
+            [first_page_link] if first_page_link else [],
+            second_page_links,
+            embedded_video_links
+    )
+
+    return jsonify({ 'links': final_link_list })
 
 def get_source_code(url):
     return urlopen(url).read().decode('utf-8')
@@ -100,3 +104,18 @@ def error_response(text):
     response = jsonify({ 'error': text })
     response.status_code = 500
     return response
+
+def dedupe_list(given_list):
+    return list(dict.fromkeys(given_list))
+
+def coerce_base_urls(given_list):
+    return map(lambda url: re.sub('a.video.nfl', 'video.nfl', url), given_list)
+
+def gather_and_dedupe_links(*links):
+    final_list = []
+    for link in links:
+        final_list = final_list + link
+    final_list = coerce_base_urls(final_list)
+    final_list = dedupe_list(final_list)
+    return final_list
+

@@ -30,6 +30,8 @@ def handle_data():
     video_link_list = get_second_page_mp4_links(video_list, video_id)
     if(mp4_link and (not mp4_link in video_link_list)):
         video_link_list.append(mp4_link)
+    video_link_list = video_link_list + get_embeddable_video_links(video_id)
+    video_link_list = list(dict.fromkeys(video_link_list))
     return jsonify({ 'links': video_link_list })
 
 def get_source_code(url):
@@ -65,6 +67,19 @@ def get_second_page_mp4_links(video_list, video_id):
         return []
     links = map(lambda x: x['videoPath'], found_video['videoBitRates'])
     return list(links)
+
+def get_embeddable_video_links(video_id):
+    path = 'http://www.nfl.com/static/embeddablevideo/' + video_id + '.json'
+    json_source = json.loads(get_source_code(path))
+    mp4_link_objects = json_source['cdnData']['bitrateInfo']
+    links = []
+    if(len(mp4_link_objects) > 0):
+        paths = map(lambda x: x['path'], mp4_link_objects)
+        links = map(lambda x: "http://video.nfl.com/" + x, paths)
+        links = list(links)
+    else:
+        links = [json_source['cdnData']['videoPlayBackUrl']]
+    return links
 
 def get_feed_url_link(text):
     match = re.search("feedURL = '(.*)'", text)

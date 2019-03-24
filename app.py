@@ -75,7 +75,7 @@ def get_embeddable_video_links(video_id):
     links = []
     if(len(mp4_link_objects) > 0):
         paths = map(lambda x: x['path'], mp4_link_objects)
-        links = map(lambda x: "http://video.nfl.com/" + x, paths)
+        links = map(lambda x: "http://a.video.nfl.com/" + x, paths)
         links = list(links)
     else:
         links = [json_source['cdnData']['videoPlayBackUrl']]

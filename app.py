@@ -31,6 +31,7 @@ def handle_data():
     if(mp4_link and (not mp4_link in video_link_list)):
         video_link_list.append(mp4_link)
     video_link_list = video_link_list + get_embeddable_video_links(video_id)
+    video_link_list = map(lambda url: re.sub('a.video.nfl', 'video.nfl', url), video_link_list)
     video_link_list = list(dict.fromkeys(video_link_list))
     return jsonify({ 'links': video_link_list })
 
@@ -75,7 +76,7 @@ def get_embeddable_video_links(video_id):
     links = []
     if(len(mp4_link_objects) > 0):
         paths = map(lambda x: x['path'], mp4_link_objects)
-        links = map(lambda x: "http://a.video.nfl.com/" + x, paths)
+        links = map(lambda x: "http://video.nfl.com/" + x, paths)
         links = list(links)
     else:
         links = [json_source['cdnData']['videoPlayBackUrl']]

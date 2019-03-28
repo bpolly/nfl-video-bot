@@ -1,0 +1,28 @@
+<head>
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic">
+  <link rel="stylesheet" href="//cdn.rawgit.com/necolas/normalize.css/master/normalize.css">
+  <link rel="stylesheet" href="//cdn.rawgit.com/milligram/milligram/master/dist/milligram.min.css">
+  <link rel= "stylesheet" type= "text/css" href= "static/css/form.css">
+  <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>
+  <!-- <script defer type="text/javascript" src="{{ url_for('static', filename='js/form_sender.js') }}"></script> -->
+</head>
+
+<body>
+  <div class="container" id="app" style="margin-top: 30px">
+    <form id="link-form">
+      <fieldset>
+        <label for="linkField">NFL Video Link</label>
+        <input type="text" placeholder="http://www.nfl.com/videos/abc123..." id="linkField" name="linkField">
+        <input class="button-primary" type="submit" value="Fetch">
+      </fieldset>
+    </form>
+
+    <div id="results"></div>
+
+    <div id="result--error" class="clearfix" style="display: none">
+      <div class="result-text"></div>
+    </div>
+  </div>
+    <script src="static/js/index.js"></script>
+</body>
